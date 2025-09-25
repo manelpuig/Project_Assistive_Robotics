@@ -1,0 +1,6 @@
+{
+  "python.defaultInterpreterPath": "C:\\Users\\marcf\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+  "terminal.integrated.env.windows": {
+    "PATH": "C:\\Users\\marcf\\AppData\\Local\\Programs\\Python\\Python310\\;${env:PATH}"
+  }
+}
