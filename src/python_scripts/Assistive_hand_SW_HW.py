@@ -6,10 +6,10 @@ from robodk.robolink import *
 from robodk.robomath import *
 
 # Define relative path to the .rdk file
-relative_path = "src/roboDK/Assistive_UR5e.rdk"
+relative_path = "src/roboDK/Custom_Assistive_UR5e.rdk"
 absolute_path = os.path.abspath(relative_path)
 
-# Start RoboDK with the project file
+# Start RoboDK with the project fileS
 RDK = Robolink()
 print("Loading RoboDK...")
 time.sleep(5)
@@ -22,10 +22,19 @@ robot = RDK.Item("UR5e")
 base = RDK.Item("UR5e Base")
 tool = RDK.Item('Hand')
 Init_target = RDK.Item('Init')
-App_shake_target = RDK.Item('App_shake')
-Shake_target = RDK.Item('Shake')
-App_give5_target = RDK.Item('App_give5')
-Give5_target = RDK.Item('Give5')
+Bajada_target = RDK.Item('Bajada')
+Subida_target = RDK.Item('Subida')
+Bajada2_target = RDK.Item('Bajada2')
+Dab5_target = RDK.Item('Dab5')
+Stop_target = RDK.Item('Stop')
+Go1_target = RDK.Item('Go1')
+Go2_target = RDK.Item('Go2')
+Go3_target = RDK.Item('Go3')
+RCP_up_target = RDK.Item('RCP_up')
+RCP_down_target = RDK.Item('RCP_down')
+Out_target = RDK.Item('Out')
+In_target = RDK.Item('In')
+
 
 # Set robot frame, tool and speed
 robot.setPoseFrame(base)
@@ -50,28 +59,49 @@ def robot_online(online):
         print("Simulation mode activated.")
 
 # Robot movements
-def move_to_init():
+def Init():
     print("Init")
+    robot.setSpeed(20)
     robot.MoveL(Init_target, True)
     print("Init_target REACHED")
+    
 
-def hand_shake():
-    print("Hand Shake")
-    robot.setSpeed(50)
-    robot.MoveL(App_shake_target, True)
-    robot.setSpeed(100)
-    robot.MoveL(Shake_target, True)
-    robot.MoveL(App_shake_target, True)
-    print("Hand Shake FINISHED")
+def Hand_wave():
+    print("Hand Wave")
+    robot.setSpeed(30)
+    robot.MoveL(Bajada_target, True)
+    robot.MoveL(Subida_target, True)
+    robot.MoveL(Bajada2_target, True)
+    print("Hand Wave FINISHED")
+    
+def Dab():
+    robot.setSpeed(30)
+    robot.MoveL(Dab5_target, True)
+    print("Dab! FINISHED")
 
-def give_me_5():
-    print("Give me 5!")
+def Stop_and_go():
+    print("Stop and go")
+    robot.MoveL(Stop_target, True)
+    time.sleep(2)
+    robot.MoveL(Go1_target, True)
     robot.setSpeed(50)
-    robot.MoveL(App_give5_target, True)
+    robot.MoveL(Go2_target, True)
+    robot.MoveL(Go3_target, True)
+    robot.MoveL(Go2_target, True)
+    robot.MoveL(Go3_target, True)
+    print("Stop and go FINISHED")
+
+def RCP():
+    print("Starting RCP...")
+    robot.setSpeed(20)
+    robot.MoveL(RCP_up_target, True)
     robot.setSpeed(100)
-    robot.MoveL(Give5_target, True)
-    robot.MoveL(App_give5_target, True)
-    print("Give me 5! FINISHED")
+    cycles = 6
+    for i in range(cycles):
+        print(f"Compression {i+1}")
+        robot.MoveL(RCP_down_target, True)
+        robot.MoveL(RCP_up_target, True)
+    print("RCP FINISHED")
 
 # Confirmation dialog to close RoboDK
 def confirm_close():
@@ -92,11 +122,18 @@ def confirm_close():
 
 # Main function
 def main():
-    robot_online(True)  # True for real robot, False for simulation
-    move_to_init()
-    hand_shake()
-    give_me_5()
-    move_to_init()
+    robot_online(False)  # True for real robot, False for simulation
+    Init()
+    time.sleep(1)
+    Hand_wave()
+    time.sleep(1)
+    Stop_and_go()
+    time.sleep(1)
+    RCP()
+    time.sleep(1)
+    Dab()
+    time.sleep(1)
+    Init()
 
 # Run main and handle closing
 if __name__ == "__main__":
